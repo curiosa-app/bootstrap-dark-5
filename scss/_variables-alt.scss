@@ -62,13 +62,13 @@ $colors-alt: (
   "black": $black-alt,
   "gray": #7e7e7e,
   // $gray-600,
-  "gray-dark": #121212 //$gray-800,,,,,,,,,
+  "gray-dark": #121212 //$gray-800,,,,,,,,,,
 ) !default;
 
 // @curiosa-overrides
 $primary-alt: #ff7b00 !default;
 $secondary-alt: $gray-600-alt !default;
-$success-alt: $green-alt !default;
+$success-alt: #0d6efd !default;
 $info-alt: #38117d !default;
 $warning-alt: $yellow-alt !default;
 $danger-alt: #fc293d !default;

@@ -38,24 +38,24 @@
  * @module DarkMode
  * @_author Vino Rodrigues
  */
-class DarkMode {
+export class DarkMode {
   /** ***const*** -- Name of the cookie or localStorage->name when saving */
-  static readonly DATA_KEY = "bs.prefers-color-scheme"
+  static readonly DATA_KEY = "bs.prefers-color-scheme";
 
   //** ***const*** -- Data selector, when present in HTML will populate with `dark` or `light` as appropriate */
-  static readonly DATA_SELECTOR = "bs-color-scheme"
+  static readonly DATA_SELECTOR = "bs-color-scheme";
 
   /** ***const*** -- String used to identify light mode *(do not change)*, @see https://www.w3.org/TR/mediaqueries-5/#prefers-color-scheme */
-  static readonly VALUE_LIGHT = "light"
+  static readonly VALUE_LIGHT = "light";
 
   /** ***const*** -- String used to identify dark mode *(do not change)*, @see https://www.w3.org/TR/mediaqueries-5/#prefers-color-scheme */
-  static readonly VALUE_DARK = "dark"
+  static readonly VALUE_DARK = "dark";
 
   /** ***const*** -- String used to identify light mode as a class in the `<HTML>` tag */
-  static readonly CLASS_NAME_LIGHT = "light"
+  static readonly CLASS_NAME_LIGHT = "light";
 
   /** ***const*** -- String used to identify dark mode as a class in the `<HTML>` tag */
-  static readonly CLASS_NAME_DARK = "dark"
+  static readonly CLASS_NAME_DARK = "dark";
 
   /**
    * ***property***
@@ -74,15 +74,15 @@ class DarkMode {
    * @type {boolean}
    */
   get inDarkMode() {
-    return DarkMode.getColorScheme() == DarkMode.VALUE_DARK
+    return DarkMode.getColorScheme() == DarkMode.VALUE_DARK;
   }
 
   set inDarkMode(val: boolean) {
-    this.setDarkMode(val, false)
+    this.setDarkMode(val, false);
   }
 
   /** @private */
-  private _hasGDPRConsent = false
+  private _hasGDPRConsent = false;
 
   /**
    * Variable to store GDPR Consent.  This setting drives the persistance mechanism.
@@ -96,36 +96,36 @@ class DarkMode {
    * darkmode.hasGDPRConsent = true;
    */
   get hasGDPRConsent() {
-    return this._hasGDPRConsent
+    return this._hasGDPRConsent;
   }
 
   set hasGDPRConsent(val: boolean) {
-    this._hasGDPRConsent = val
+    this._hasGDPRConsent = val;
     if (val) {
       // delete cookie if it exists
-      const prior = DarkMode.readCookie(DarkMode.DATA_KEY)
+      const prior = DarkMode.readCookie(DarkMode.DATA_KEY);
       if (prior) {
-        DarkMode.saveCookie(DarkMode.DATA_KEY, "", -1)
-        localStorage.setItem(DarkMode.DATA_KEY, prior)
+        DarkMode.saveCookie(DarkMode.DATA_KEY, "", -1);
+        localStorage.setItem(DarkMode.DATA_KEY, prior);
       }
     } else {
       // delete localStorage if it exists
-      const prior = localStorage.getItem(DarkMode.DATA_KEY)
+      const prior = localStorage.getItem(DarkMode.DATA_KEY);
       if (prior) {
-        localStorage.removeItem(DarkMode.DATA_KEY)
-        DarkMode.saveCookie(DarkMode.DATA_KEY, prior)
+        localStorage.removeItem(DarkMode.DATA_KEY);
+        DarkMode.saveCookie(DarkMode.DATA_KEY, prior);
       }
     }
   }
 
   /** Expiry time in days when saving and GDPR consent is give */
-  cookieExpiry = 365
+  cookieExpiry = 365;
 
   /**
    * Saves the instance of the documentRoot (i.e. `<html>` tag) when the object is created.
    */
   get documentRoot(): HTMLHtmlElement {
-    return document.getElementsByTagName("html")[0]
+    return document.getElementsByTagName("html")[0];
   }
 
   /**
@@ -133,12 +133,12 @@ class DarkMode {
    * The constructor initializes the `darkmode` object (that should be used as a singleton).
    */
   constructor() {
-    if (document.readyState === 'loading') {
-      document.addEventListener("DOMContentLoaded", function() {
-        DarkMode.onDOMContentLoaded()
-      })
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", function () {
+        DarkMode.onDOMContentLoaded();
+      });
     } else {
-      DarkMode.onDOMContentLoaded()
+      DarkMode.onDOMContentLoaded();
     }
   }
 
@@ -152,13 +152,13 @@ class DarkMode {
    * @returns {void}
    */
   static saveCookie(name: string, value = "", days = 365): void {
-    let exp = ""
+    let exp = "";
     if (days) {
-      const date = new Date()
-      date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000))
-      exp = "; expires=" + date.toUTCString()
+      const date = new Date();
+      date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+      exp = "; expires=" + date.toUTCString();
     }
-    document.cookie = name + "=" + value + exp + "; SameSite=Strict; path=/"
+    document.cookie = name + "=" + value + exp + "; SameSite=Strict; path=/";
   }
 
   /**
@@ -169,15 +169,19 @@ class DarkMode {
    * @param {number} days -- Number of days to expire the cookie when the cookie is used, ignored for `localStorage`
    * @returns {void}
    */
-  private saveValue(name: string, value: string, days = this.cookieExpiry): void {
+  private saveValue(
+    name: string,
+    value: string,
+    days = this.cookieExpiry
+  ): void {
     if (this.hasGDPRConsent) {
       // use cookies
-      DarkMode.saveCookie(name, value, days)
+      DarkMode.saveCookie(name, value, days);
     } else {
       // use local storage
-      localStorage.setItem(name, value)
+      localStorage.setItem(name, value);
     }
-    return
+    return;
   }
 
   /**
@@ -185,17 +189,17 @@ class DarkMode {
    * @private
    */
   static readCookie(name: string): string {
-    const n = name + "="
-    const parts = document.cookie.split(";")
+    const n = name + "=";
+    const parts = document.cookie.split(";");
 
-    for(let i=0; i < parts.length; i++) {
-      const part = parts[i].trim()
+    for (let i = 0; i < parts.length; i++) {
+      const part = parts[i].trim();
       if (part.startsWith(n)) {
         // found it
-        return part.substring(n.length)
+        return part.substring(n.length);
       }
     }
-    return ""
+    return "";
   }
 
   /**
@@ -208,10 +212,10 @@ class DarkMode {
    */
   readValue(name: string): string {
     if (this.hasGDPRConsent) {
-      return DarkMode.readCookie(name)
+      return DarkMode.readCookie(name);
     } else {
-      const ret = localStorage.getItem(name)
-      return ret ? ret : ""
+      const ret = localStorage.getItem(name);
+      return ret ? ret : "";
     }
   }
 
@@ -225,9 +229,9 @@ class DarkMode {
    */
   eraseValue(name: string): void {
     if (this.hasGDPRConsent) {
-      this.saveValue(name, "", -1)
+      this.saveValue(name, "", -1);
     } else {
-      localStorage.removeItem(name)
+      localStorage.removeItem(name);
     }
   }
 
@@ -239,8 +243,8 @@ class DarkMode {
    * @returns {string} -- The current value, either `light` or `dark`, or an empty string if not saved prior
    */
   getSavedColorScheme(): string {
-    const val = this.readValue(DarkMode.DATA_KEY)
-    return val ? val : ""
+    const val = this.readValue(DarkMode.DATA_KEY);
+    return val ? val : "";
   }
 
   /**
@@ -251,12 +255,18 @@ class DarkMode {
    * @returns {string} -- The current value, either `light` or `dark`, or an empty string if the media query is not supported
    */
   getPreferedColorScheme(): string {
-    if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      return DarkMode.VALUE_DARK
-    } else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches) {
-      return DarkMode.VALUE_LIGHT
+    if (
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches
+    ) {
+      return DarkMode.VALUE_DARK;
+    } else if (
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: light)").matches
+    ) {
+      return DarkMode.VALUE_LIGHT;
     } else {
-      return ""
+      return "";
     }
   }
 
@@ -306,25 +316,34 @@ class DarkMode {
    * @returns {void} -- Nothing, assumes saved
    */
   setDarkMode(darkMode: boolean, doSave = true): void {
-    const nodeList = document.querySelectorAll("[data-"+DarkMode.DATA_SELECTOR+"]")
+    const nodeList = document.querySelectorAll(
+      "[data-" + DarkMode.DATA_SELECTOR + "]"
+    );
 
     if (nodeList.length == 0) {
       if (!darkMode) {
         // light
-        this.documentRoot.classList.remove(DarkMode.CLASS_NAME_DARK)
-        this.documentRoot.classList.add(DarkMode.CLASS_NAME_LIGHT)
+        this.documentRoot.classList.remove(DarkMode.CLASS_NAME_DARK);
+        this.documentRoot.classList.add(DarkMode.CLASS_NAME_LIGHT);
       } else {
         // dark
-        this.documentRoot.classList.remove(DarkMode.CLASS_NAME_LIGHT)
-        this.documentRoot.classList.add(DarkMode.CLASS_NAME_DARK)
+        this.documentRoot.classList.remove(DarkMode.CLASS_NAME_LIGHT);
+        this.documentRoot.classList.add(DarkMode.CLASS_NAME_DARK);
       }
     } else {
       for (let i = 0; i < nodeList.length; i++) {
-        nodeList[i].setAttribute("data-"+DarkMode.DATA_SELECTOR, darkMode ? DarkMode.VALUE_DARK : DarkMode.VALUE_LIGHT)
+        nodeList[i].setAttribute(
+          "data-" + DarkMode.DATA_SELECTOR,
+          darkMode ? DarkMode.VALUE_DARK : DarkMode.VALUE_LIGHT
+        );
       }
     }
 
-    if (doSave) this.saveValue(DarkMode.DATA_KEY, darkMode ? DarkMode.VALUE_DARK : DarkMode.VALUE_LIGHT)
+    if (doSave)
+      this.saveValue(
+        DarkMode.DATA_KEY,
+        darkMode ? DarkMode.VALUE_DARK : DarkMode.VALUE_LIGHT
+      );
   }
 
   /**
@@ -343,15 +362,19 @@ class DarkMode {
    * @returns {void} - Nothing, assumes success
    */
   toggleDarkMode(doSave = true): void {
-    let dm
-    const node = document.querySelector("[data-"+DarkMode.DATA_SELECTOR+"]")  // only get first one
+    let dm;
+    const node = document.querySelector(
+      "[data-" + DarkMode.DATA_SELECTOR + "]"
+    ); // only get first one
 
     if (!node) {
-      dm = this.documentRoot.classList.contains(DarkMode.CLASS_NAME_DARK)
+      dm = this.documentRoot.classList.contains(DarkMode.CLASS_NAME_DARK);
     } else {
-      dm = node.getAttribute("data-"+DarkMode.DATA_SELECTOR) == DarkMode.VALUE_DARK
+      dm =
+        node.getAttribute("data-" + DarkMode.DATA_SELECTOR) ==
+        DarkMode.VALUE_DARK;
     }
-    this.setDarkMode( !dm, doSave )
+    this.setDarkMode(!dm, doSave);
   }
 
   /**
@@ -369,19 +392,21 @@ class DarkMode {
    * @returns {void} - Nothing, no error handling is performed.
    */
   resetDarkMode(): void {
-    this.eraseValue(DarkMode.DATA_KEY)
-    const dm = this.getPreferedColorScheme()
+    this.eraseValue(DarkMode.DATA_KEY);
+    const dm = this.getPreferedColorScheme();
     if (dm) {
-      this.setDarkMode( dm == DarkMode.VALUE_DARK, false )
+      this.setDarkMode(dm == DarkMode.VALUE_DARK, false);
     } else {
       // make good when `prefers-color-scheme` not supported
-      const nodeList = document.querySelectorAll("[data-"+DarkMode.DATA_SELECTOR+"]")
+      const nodeList = document.querySelectorAll(
+        "[data-" + DarkMode.DATA_SELECTOR + "]"
+      );
       if (nodeList.length == 0) {
-        this.documentRoot.classList.remove(DarkMode.CLASS_NAME_LIGHT)
-        this.documentRoot.classList.remove(DarkMode.CLASS_NAME_DARK)
+        this.documentRoot.classList.remove(DarkMode.CLASS_NAME_LIGHT);
+        this.documentRoot.classList.remove(DarkMode.CLASS_NAME_DARK);
       } else {
         for (let i = 0; i < nodeList.length; i++) {
-          nodeList[i].setAttribute("data-"+DarkMode.DATA_SELECTOR, "")
+          nodeList[i].setAttribute("data-" + DarkMode.DATA_SELECTOR, "");
         }
       }
     }
@@ -393,19 +418,25 @@ class DarkMode {
    * @returns {string} -- The current value, either `light` or `dark`, or an empty string if not present
    */
   static getColorScheme(): string {
-    const node = document.querySelector("[data-"+DarkMode.DATA_SELECTOR+"]")
+    const node = document.querySelector(
+      "[data-" + DarkMode.DATA_SELECTOR + "]"
+    );
     if (!node) {
       if (darkmode.documentRoot.classList.contains(DarkMode.CLASS_NAME_DARK)) {
-        return DarkMode.VALUE_DARK
-      } else if (darkmode.documentRoot.classList.contains(DarkMode.CLASS_NAME_LIGHT)) {
-        return DarkMode.VALUE_LIGHT
+        return DarkMode.VALUE_DARK;
+      } else if (
+        darkmode.documentRoot.classList.contains(DarkMode.CLASS_NAME_LIGHT)
+      ) {
+        return DarkMode.VALUE_LIGHT;
       } else {
-        return ""
+        return "";
       }
     } else {
-      const data = node.getAttribute("data-"+DarkMode.DATA_SELECTOR)
+      const data = node.getAttribute("data-" + DarkMode.DATA_SELECTOR);
       // exact match only
-      return ((data == DarkMode.VALUE_DARK) || (data == DarkMode.VALUE_LIGHT)) ? data : ""
+      return data == DarkMode.VALUE_DARK || data == DarkMode.VALUE_LIGHT
+        ? data
+        : "";
     }
   }
 
@@ -418,10 +449,10 @@ class DarkMode {
    * @returns {void} -- Nothing, assumes success
    */
   static updatePreferedColorSchemeEvent(): void {
-    let dm = darkmode.getSavedColorScheme()
+    let dm = darkmode.getSavedColorScheme();
     if (!dm) {
-      dm = darkmode.getPreferedColorScheme()
-      if (dm) darkmode.setDarkMode( dm == DarkMode.VALUE_DARK, false )
+      dm = darkmode.getPreferedColorScheme();
+      if (dm) darkmode.setDarkMode(dm == DarkMode.VALUE_DARK, false);
     }
   }
 
@@ -441,25 +472,27 @@ class DarkMode {
    * @returns {void}
    */
   static onDOMContentLoaded(): void {
-    let pref = darkmode.readValue(DarkMode.DATA_KEY)
+    let pref = darkmode.readValue(DarkMode.DATA_KEY);
     if (!pref) {
       // user has not set pref. so get from `<HTML>` tag in case developer has set pref.
-      pref = DarkMode.getColorScheme()
+      pref = DarkMode.getColorScheme();
       if (!pref) {
         // when all else fails, get pref. from OS/browser
-        pref = darkmode.getPreferedColorScheme()
+        pref = darkmode.getPreferedColorScheme();
       }
     }
-    const dm = (pref == DarkMode.VALUE_DARK)
+    const dm = pref == DarkMode.VALUE_DARK;
 
     // initialize the `HTML` tag
-    darkmode.setDarkMode(dm, false)
+    darkmode.setDarkMode(dm, false);
 
     // update every time it changes
     if (window.matchMedia) {
-      window.matchMedia("(prefers-color-scheme: dark)").addEventListener( "change", function() {
-        DarkMode.updatePreferedColorSchemeEvent()
-      })
+      window
+        .matchMedia("(prefers-color-scheme: dark)")
+        .addEventListener("change", function () {
+          DarkMode.updatePreferedColorSchemeEvent();
+        });
     }
   }
 }
@@ -467,4 +500,4 @@ class DarkMode {
 /**
  * ***const*** -- This is the global instance (object) of the DarkMode class.
  */
-const darkmode = new DarkMode()
+const darkmode = new DarkMode();
